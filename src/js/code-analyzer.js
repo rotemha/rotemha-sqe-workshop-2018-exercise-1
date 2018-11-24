@@ -48,13 +48,26 @@ const conti =(Body_json)=>{
     case 'ReturnStatement':
         arr.push({'line':Body_json.loc.start.line , 'type':'Return Statement', 'name':'', 'condition':'', 'value':escodegen.generate(Body_json.argument)});
         break;
-    case 'ForStatement':
-        parseForStatment(Body_json);
-        break;
     case 'IfStatement':
         parseIfStatement(Body_json);
         break;
+    default:
+        conti2(Body_json);
+        break;
     }};
+const conti2 = (Body_json)=>{
+    switch (Body_json.type){
+    case 'ForStatement':
+        parseForStatment(Body_json);
+        break;
+    case 'ForInStatement':
+        parseForInStatment(Body_json);
+        break;
+    case 'ForOfStatement':
+        parseForOfStatment(Body_json);
+        break;
+    }
+};
 
 
 
@@ -86,6 +99,7 @@ const parseIfStatement = (input)=>{
 };
 
 const parseAlt =(input)=>{
+    arr.push({'line': input.loc.start.line, 'type':'Else', 'name':'','condition':'','value':''});
     if (input.type ==='BlockStatement') {
         for (var x in input.body)
             parseFuncBody(input.body[x]);
@@ -100,5 +114,22 @@ const parseForStatment=(input)=>{
     arr.push({'line': input.update.loc.start.line, 'type':'For Statement Update', 'name':'','condition':'','value':escodegen.generate(input.update)});
     for(var x in input.body.body)
         parseFuncBody(input.body.body[x]);
+};
+
+
+const parseForInStatment=(input)=>{
+    arr.push({'line': input.left.loc.start.line, 'type':'For In Left', 'name':'','condition':'','value':escodegen.generate(input.left)});
+    arr.push({'line': input.right.loc.start.line, 'type':'For In Right', 'name':'','condition':'','value':escodegen.generate(input.right)});
+    for(var x in input.body.body)
+        parseFuncBody(input.body.body[x]);
+
+};
+
+const parseForOfStatment=(input)=>{
+    arr.push({'line': input.left.loc.start.line, 'type':'For Of Left', 'name':'','condition':'','value':escodegen.generate(input.left)});
+    arr.push({'line': input.right.loc.start.line, 'type':'For Of Right', 'name':'','condition':'','value':escodegen.generate(input.right)});
+    for(var x in input.body.body)
+        parseFuncBody(input.body.body[x]);
+
 };
 export {parseCode};
