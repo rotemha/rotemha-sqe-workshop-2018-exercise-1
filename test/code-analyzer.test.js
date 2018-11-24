@@ -72,6 +72,7 @@ describe('The javascript parser', () => {
                 {'line':1 , 'type':'Variable Declaration', 'name':'c', 'condition':'', 'value':''},
                 {'line':1 , 'type':'If Statement', 'name':'', 'condition':'c < 0', 'value':''},
                 {'line':1 , 'type':'Assignment Expression', 'name':'x', 'condition':'', 'value':'x + 1'},
+                {'line':1 , 'type':'Else', 'name':'', 'condition':'', 'value':''},
                 {'line':1 , 'type':'Assignment Expression', 'name':'x', 'condition':'', 'value':'x + 2'}
             ]
         );
@@ -85,6 +86,7 @@ describe('The javascript parser', () => {
                 {'line':1 , 'type':'Variable Declaration', 'name':'c', 'condition':'', 'value':''},
                 {'line':1 , 'type':'If Statement', 'name':'', 'condition':'c < 0', 'value':''},
                 {'line':1 , 'type':'Assignment Expression', 'name':'x', 'condition':'', 'value':'x + 1'},
+                {'line':1 , 'type':'Else', 'name':'', 'condition':'', 'value':''},
                 {'line':1 , 'type':'Assignment Expression', 'name':'x', 'condition':'', 'value':'x + 2'}
             ]
         );
@@ -110,8 +112,37 @@ describe('The javascript parser', () => {
                 {'line':1 , 'type':'Variable Declaration', 'name':'c', 'condition':'', 'value':''},
                 {'line':1 , 'type':'If Statement', 'name':'', 'condition':'c < 0', 'value':''},
                 {'line':1 , 'type':'Assignment Expression', 'name':'x', 'condition':'', 'value':'x + 1'},
+                {'line':1 , 'type':'Else', 'name':'', 'condition':'', 'value':''},
                 {'line':1 , 'type':'Assignment Expression', 'name':'x', 'condition':'', 'value':'x + 2'}
             ]
         );
     });
+
+    it('is parsing a for in loop correctly', () => {
+        assert.deepEqual(
+            parseCode('function test(c){ for(x in person){x=x+1;}}'),
+            [
+                {'line':1 , 'type':'Function Declaration', 'name':'test', 'condition':'', 'value':''},
+                {'line':1 , 'type':'Variable Declaration', 'name':'c', 'condition':'', 'value':''},
+                {'line':1 , 'type':'For In Left', 'name':'', 'condition':'', 'value':'x'},
+                {'line':1 , 'type':'For In Right', 'name':'', 'condition':'', 'value':'person'},
+                {'line':1 , 'type':'Assignment Expression', 'name':'x', 'condition':'', 'value':'x + 1'}
+            ]
+        );
+    });
+
+    it('is parsing a for of loop correctly', () => {
+        assert.deepEqual(
+            parseCode('function test(c){ for(let v of arr){x=x+1;}}'),
+            [
+                {'line':1 , 'type':'Function Declaration', 'name':'test', 'condition':'', 'value':''},
+                {'line':1 , 'type':'Variable Declaration', 'name':'c', 'condition':'', 'value':''},
+                {'line':1 , 'type':'For Of Left', 'name':'', 'condition':'', 'value':'let v;'},
+                {'line':1 , 'type':'For Of Right', 'name':'', 'condition':'', 'value':'arr'},
+                {'line':1 , 'type':'Assignment Expression', 'name':'x', 'condition':'', 'value':'x + 1'}
+            ]
+        );
+    });
+
+
 });
